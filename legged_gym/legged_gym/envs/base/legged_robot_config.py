@@ -158,7 +158,7 @@ class LeggedRobotCfg(BaseConfig):
             joint_power=-2e-5
             smoothness=-0.01
             # feet_clearance=-0.01
-            power_distribution=-10e-6
+            power_distribution=-10e-5
             # feet_clearance = -0.01
 
             
