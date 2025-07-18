@@ -38,7 +38,7 @@ class ActorCritic_DWAQ(nn.Module):
             nn.Linear(128,64),
             self.activation,
         )
-        self.encode_mean_latent = nn.Linear(64,cenet_out_dim-3)
+        self.encode_mean_latent = nn.Linear(64,cenet_out_dim-3)                # cenet_out_dim = 19
         self.encode_logvar_latent = nn.Linear(64,cenet_out_dim-3)
         self.encode_mean_vel = nn.Linear(64,3)
         self.encode_logvar_vel = nn.Linear(64,3)
@@ -81,21 +81,21 @@ class ActorCritic_DWAQ(nn.Module):
         return code
     
     def cenet_forward(self,obs_history):
-        distribution = self.encoder(obs_history)
-        mean_latent = self.encode_mean_latent(distribution)
-        logvar_latent = self.encode_logvar_latent(distribution)
+        distribution = self.encoder(obs_history)                  # self.encoder output is dimension 64
+        mean_latent = self.encode_mean_latent(distribution)       # self.encode_mean_latent = nn.Linear(64,cenet_out_dim-3) # cenet_out_dim = 19
+        logvar_latent = self.encode_logvar_latent(distribution)   # self.encode_logvar_latent = nn.Linear(64,cenet_out_dim-3)
         # var = torch.exp(logvar_latent*0.5)
         # code_temp = torch.randn_like(var)
         # code = mean_latent + var*code_temp
         # print("latent : ",code[0])
-        mean_vel = self.encode_mean_vel(distribution)
-        logvar_vel = self.encode_mean_vel(distribution)
-        code_latent = self.reparameterise(mean_latent,logvar_latent)
-        code_vel = self.reparameterise(mean_vel,logvar_vel)
+        mean_vel = self.encode_mean_vel(distribution)              # self.encode_mean_vel = nn.Linear(64,3)
+        logvar_vel = self.encode_logvar_vel(distribution)           # self.encode_logvar_vel = nn.Linear(64,3)
+        code_latent = self.reparameterise(mean_latent,logvar_latent)   # code_latent shape :  torch.Size([4096, 16]
+        code_vel = self.reparameterise(mean_vel,logvar_vel)        # code_vel shape :  torch.Size([4096, 3])
         code = torch.cat((code_vel,code_latent),dim=-1)
-        decode = self.decoder(code)
+        decode = self.decoder(code)                                # self.decoder output dimension is 45
         return code,code_vel,decode,mean_vel,logvar_vel,mean_latent,logvar_latent
-
+    
     @property
     def action_mean(self):
         return self.distribution.mean

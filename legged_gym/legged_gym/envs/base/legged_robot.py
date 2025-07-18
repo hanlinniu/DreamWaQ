@@ -242,8 +242,8 @@ class LeggedRobot(BaseTask):
                                     (self.dof_pos - self.default_dof_pos) * self.obs_scales.dof_pos,
                                     self.dof_vel * self.obs_scales.dof_vel,
                                     self.actions
-                                    ),dim=-1)
-        # add perceptive inputs if not blind
+                                    ),dim=-1)     # self.obs_buf shape :  torch.Size([4096, 45])
+        # add perceptive inputs if not blind    
         
         heights = torch.clip(self.root_states[:, 2].unsqueeze(1) - 0.5 - self.measured_heights, -1, 1.) * self.obs_scales.height_measurements
         
