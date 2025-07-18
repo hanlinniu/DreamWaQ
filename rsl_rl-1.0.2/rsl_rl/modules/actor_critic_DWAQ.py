@@ -41,7 +41,7 @@ class ActorCritic_DWAQ(nn.Module):
         self.encode_mean_latent = nn.Linear(64,cenet_out_dim-3)                # cenet_out_dim = 19
         self.encode_logvar_latent = nn.Linear(64,cenet_out_dim-3)
         self.encode_mean_vel = nn.Linear(64,3)
-        self.encode_logvar_vel = nn.Linear(64,3)
+        # self.encode_logvar_vel = nn.Linear(64,3)
 
         self.decoder = nn.Sequential(
             nn.Linear(cenet_out_dim,64),
@@ -89,12 +89,14 @@ class ActorCritic_DWAQ(nn.Module):
         # code = mean_latent + var*code_temp
         # print("latent : ",code[0])
         mean_vel = self.encode_mean_vel(distribution)              # self.encode_mean_vel = nn.Linear(64,3)
-        logvar_vel = self.encode_logvar_vel(distribution)           # self.encode_logvar_vel = nn.Linear(64,3)
+        # logvar_vel = self.encode_logvar_vel(distribution)           # self.encode_logvar_vel = nn.Linear(64,3)
         code_latent = self.reparameterise(mean_latent,logvar_latent)   # code_latent shape :  torch.Size([4096, 16]
-        code_vel = self.reparameterise(mean_vel,logvar_vel)        # code_vel shape :  torch.Size([4096, 3])
+
+        code_vel = mean_vel
+        # code_vel = self.reparameterise(mean_vel,logvar_vel)        # code_vel shape :  torch.Size([4096, 3])
         code = torch.cat((code_vel,code_latent),dim=-1)
         decode = self.decoder(code)                                # self.decoder output dimension is 45
-        return code,code_vel,decode,mean_vel,logvar_vel,mean_latent,logvar_latent
+        return code,code_vel,decode,mean_vel,code_vel,mean_latent,logvar_latent
     
     @property
     def action_mean(self):
