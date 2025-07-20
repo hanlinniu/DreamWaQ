@@ -158,7 +158,7 @@ class LeggedRobotCfg(BaseConfig):
             joint_power=-2e-5
             smoothness=-0.01
             # feet_clearance=-0.01
-            power_distribution=-10e-6
+            power_distribution=-10e-5
             # feet_clearance = -0.01
 
             
@@ -253,7 +253,7 @@ class LeggedRobotCfgPPO(BaseConfig):
         policy_class_name = 'ActorCritic_DWAQ'
         algorithm_class_name = 'PPO'
         num_steps_per_env = 24 # per iteration
-        max_iterations = 3000 # number of policy updates
+        max_iterations = 20000 # number of policy updates
 
         # logging
         save_interval = 50 # check for potential saves every this many iterations
