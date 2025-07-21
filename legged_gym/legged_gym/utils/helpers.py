@@ -223,11 +223,11 @@ def export_policy_as_jit_encoder(actor_critic, path):
         traced_script_module = torch.jit.script(model)
         traced_script_module.save(path4)
 
-        path5 = os.path.join(path, 'vel_var_dwaq.pt')
-        model = copy.deepcopy(actor_critic.encode_logvar_vel).to('cpu')
-        print("vel var model",model)
-        traced_script_module = torch.jit.script(model)
-        traced_script_module.save(path5)
+        # path5 = os.path.join(path, 'vel_var_dwaq.pt')
+        # model = copy.deepcopy(actor_critic.encode_logvar_vel).to('cpu')
+        # print("vel var model",model)
+        # traced_script_module = torch.jit.script(model)
+        # traced_script_module.save(path5)
 
 
 
