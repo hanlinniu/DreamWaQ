@@ -62,7 +62,7 @@ class LeggedRobotCfg(BaseConfig):
         num_rows= 10 # number of terrain rows (levels)
         num_cols = 20 # number of terrain cols (types)
         # terrain types: [smooth slope, rough slope, stairs up, stairs down, discrete]
-        terrain_proportions = [0.1, 0.1, 0.35, 0.35, 0.1]
+        terrain_proportions = [0.1, 0.1, 0.35, 0.35, 0.1]    # original [0.1, 0.1, 0.35, 0.35, 0.1]
         # trimesh only:
         slope_treshold = 0.75 # slopes above this threshold will be corrected to vertical surfaces
 
@@ -90,8 +90,8 @@ class LeggedRobotCfg(BaseConfig):
     class control:
         control_type = 'P' # P: position, V: velocity, T: torques
         # PD Drive parameters:
-        stiffness = {'joint_a': 10.0, 'joint_b': 15.0}  # [N*m/rad]
-        damping = {'joint_a': 1.0, 'joint_b': 1.5}     # [N*m*s/rad]
+        stiffness = {'joint_a': 10.0, 'joint_b': 10.0}  # [N*m/rad]    # original stiffness = {'joint_a': 10.0, 'joint_b': 15.0}  # [N*m/rad]
+        damping = {'joint_a': 1.0, 'joint_b': 1.0}     # [N*m*s/rad]   # original damping = {'joint_a': 1.0, 'joint_b': 1.5}     # [N*m*s/rad]
         # action scale: target angle = actionScale * action + defaultAngle
         action_scale = 0.5
         # decimation: Number of control action updates @ sim DT per policy DT
@@ -145,7 +145,10 @@ class LeggedRobotCfg(BaseConfig):
             lin_vel_z = -2.0
             ang_vel_xy = -0.05
             orientation = -0.2
-            #torques = -0.00001
+            delta_torques = -1.0e-7
+            torques = -0.00001
+            dof_error = -0.06
+
             #dof_vel = -0.
             dof_acc = -2.5e-7
             base_height = -1.0 
@@ -253,7 +256,7 @@ class LeggedRobotCfgPPO(BaseConfig):
         policy_class_name = 'ActorCritic_DWAQ'
         algorithm_class_name = 'PPO'
         num_steps_per_env = 24 # per iteration
-        max_iterations = 20000 # number of policy updates
+        max_iterations = 30000 # number of policy updates
 
         # logging
         save_interval = 50 # check for potential saves every this many iterations
